@@ -18,8 +18,9 @@ loop:
 mov si, ax
 add si, HERE
 
-MOV DX, 200
-MOV CX, 11
+MOV BX, 0XA5A5
+MOV DX, 500; must be the COPYJUMP + bp*times we bomb in the main loop
+MOV CX, 11; BYTES OF COPY LOOP CODE
 REP MOVSW
 
 mov cx, 2 
@@ -49,17 +50,14 @@ end:
 barzi:
 HERE:
 MOVSW
+ADD SP, DX
 MOVSW
-MOVSW 
+PUSH BX
+MOVSW
 MOVSW
 movsw
-movsw
-
-ADD DI, DX
-mov sp,di
-MOVSW
-dec DI
-CALL DI
+mov DI,SP
+CALL SP
 
 
 nop
@@ -69,3 +67,4 @@ MOVSW
 MOVSW
 XOR SI, SI
 MOVSW
+
