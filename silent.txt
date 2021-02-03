@@ -7,7 +7,7 @@ mov sp, ax
 
 mov si, ax
 add si,code
-mov cx, 0x3
+mov cx, 0x30
 mov bp , 0x4
 loop:
     movsw
@@ -19,7 +19,7 @@ mov si, ax
 add si, HERE
 
 MOV BX, 0XA5A5
-MOV DX, 500; must be the COPYJUMP + bp*times we bomb in the main loop
+MOV DX, 0x800; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
 MOV CX, 12; BYTES OF COPY LOOP CODE
 REP MOVSW
 
