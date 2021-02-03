@@ -1,0 +1,72 @@
+assembly
+push ss
+pop es
+push cs
+pop ss
+
+mov sp, ax
+
+mov si, ax
+add si,code
+mov cx, 0x3
+mov bp , 0x4
+loop:
+    movsw
+    movsw
+    sub si, bp
+    loop loop
+
+mov si, ax
+add si, HERE
+
+MOV DX, 200
+MOV CX, 11
+REP MOVSW
+
+mov cx, 2 
+
+jmp after_code
+code:
+    MOVSW
+    sub sp,bp
+    
+    STOSW
+    
+after_code:
+push ds
+push es
+pop ds
+pop es
+mov bp , 13
+mov di, ax
+add di,end
+xor si,si
+mov ax, 0xA59C
+stosw
+;stosw
+end:
+
+
+barzi:
+HERE:
+MOVSW
+MOVSW
+MOVSW 
+MOVSW
+movsw
+movsw
+
+ADD DI, DX
+mov sp,di
+MOVSW
+dec DI
+CALL DI
+
+
+nop
+MOVSW
+nop
+MOVSW
+MOVSW
+XOR SI, SI
+MOVSW
