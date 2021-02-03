@@ -1,4 +1,3 @@
-assembly
 push ss
 pop es
 push cs
