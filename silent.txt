@@ -31,8 +31,6 @@ code:
     sub sp,bp
     
     STOSW
-kill:
-	db 0xcc
 after_code:
 push ds
 push es
@@ -54,19 +52,20 @@ MOVSW
 ADD SP, DX
 MOVSW
 PUSH BX
-movsw
-dec cx
-movsw
-movsw
-jz kill
+
 MOVSW
 MOVSW
 movsw
 mov DI,SP
 CALL SP
 
-
-nop
+kill:
+db 0xcc
+movsw
+dec cx
+movsw
+movsw
+jz kill
 MOVSW
 MOVSW
 XOR SI, SI
