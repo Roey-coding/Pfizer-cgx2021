@@ -1,0 +1,72 @@
+push ss
+pop es
+push cs
+pop ss
+
+mov sp, ax
+
+mov si, ax
+add si,code
+mov cx, 0x30
+mov bp , 0x4
+loop:
+    movsw
+    movsw
+    sub si, bp
+    loop loop
+
+mov si, ax
+add si, HERE
+
+MOV BX, 0XA5A5
+MOV DX, 0x800; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
+MOV CX, 12; BYTES OF COPY LOOP CODE
+REP MOVSW
+
+mov cx, 0xffff
+
+jmp after_code
+code:
+    MOVSW
+    sub sp,bp
+    
+    STOSW
+after_code:
+push ds
+push es
+pop ds
+pop es
+mov bp , 13
+mov di, ax
+add di,end
+xor si,si
+mov ax, 0xA59C
+stosw
+;stosw
+end:
+
+
+barzi:
+HERE:
+MOVSW
+ADD SP, DX
+MOVSW
+PUSH BX
+
+MOVSW
+MOVSW
+movsw
+mov DI,SP
+CALL SP
+
+kill:
+db 0xcc
+movsw
+dec cx
+movsw
+movsw
+jz kill
+MOVSW
+MOVSW
+XOR SI, SI
+MOVSW
