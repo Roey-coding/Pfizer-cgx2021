@@ -1,7 +1,7 @@
 %define GIBBERISH 0xDEAD
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
-%define ZOMBIE_LIFE_TIME 0x0CCCC
+%define ZOMBIE_LIFE_TIME 0x0CCC
 %define SURVIVOR_LIFE_TIME 0xff
 %define MOVSW_PUSHF 0xA59C
 %define SURVIVOR_SP 0x357
@@ -18,7 +18,7 @@ code:
     
 HERE:
 MOVSW
-ADD SP, DX
+ADD SP, bx
 MOVSW
 PUSH cx
 
@@ -31,7 +31,7 @@ CALL SP
 kill:
 db 0xcc
 movsw
-dec bx
+dec dx
 movsw
 movsw
 jz kill
@@ -75,26 +75,26 @@ mov word [bx+OFFSET_AT_TURN], CAPTURE_OP
 END:
 
 mov sp, SURVIVOR_SP
-mov bh, SURVIVOR_LIFE_TIME
+mov dh, SURVIVOR_LIFE_TIME
 jmp common_code
 
 zombie_here:
 mov sp, ZOMBIE_SP
-mov bx, ZOMBIE_LIFE_TIME
+mov dx, ZOMBIE_LIFE_TIME
 
 
 common_code:
-mov ax, 0000    
+mov bx, 0000    
 
 push ss
 pop es
 push cs
 pop ss
 
-add sp,ax
+add sp,bx
 
-mov si, ax
-add si,code 
+lea si, [bx + code]
+
 mov cx, 0x30
 mov bp , 0x4
 loop:
@@ -103,13 +103,12 @@ loop:
     sub si, bp
     loop loop
 
-mov si, ax
-add si, HERE 
+lea si,[bx + HERE]
 
-MOV DX, 0x800; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
-MOV CX, 12; BYTES OF COPY LOOP CODE
+MOV bx, 0x800; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
+MOV CL, 12; BYTES OF COPY LOOP CODE
 REP MOVSW
-MOV cX, 0XA5A5
+MOV CL, 0XA5
 
 push ds
 push es
