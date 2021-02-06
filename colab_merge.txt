@@ -49,9 +49,13 @@ Zombie_catch_code:
 mov bx, ax
 mov [bx + common_code + 1], ax
 add bx, start_arr
+mov si, bx
 
 add ax, zombie_here
 mov [JMP_WITH], ax
+
+mov cl, 8
+mov di, 0x8100
 
 ; clear slots
 xor ax, ax
@@ -59,7 +63,6 @@ mov [0xC100], ax ; 49152, half
 mov [0xA100], ax ; quarter #1
 mov [0x2100], ax ; quarter #2
 
-nop
 check:
     xor ax, [0xA100] ; 1/4 
     xor ax, [0x2100] ; 1/4 
@@ -76,8 +79,26 @@ xor ah, al
 mov bx, ax
 mov word [bx+OFFSET_AT_TURN], CAPTURE_OP
 
-END:
+for_all_zombies:
+    mov ax, [di]
+    push ax
+    add di, 0x100
+    loop for_all_zombies
+   
+mov cl, 8
+roundup_remaining:
+    pop ax
+    xlatb                   ;al = startL^startH
+    xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
+    xlatb                   ;al = startL
+    xor ah, al
+    mov bx, ax
+    mov word [bx+OFFSET_AT_TURN], CAPTURE_OP
+    mov bx, si
+    loop roundup_remaining
 
+END:
+xor di, di
 mov sp, SURVIVOR_SP
 mov dh, SURVIVOR_LIFE_TIME
 jmp common_code
