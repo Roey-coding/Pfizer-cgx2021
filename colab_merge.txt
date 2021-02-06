@@ -1,16 +1,13 @@
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
-
-%define ZOMBIE_LIFE_TIME 0x02cc
-%define SURVIVOR_SP 0x050
-
-%define ZOMBIE_SP 0x789
-
+%define ZOMBIE_LIFE_TIME 0x02CC
+%define SURVIVOR_SP 0x789
+%define ZOMBIE_SP 0x50
 %define CAPTURE_OP 0x26FF
 %define ITERATIONS_AMOUNT 0X30
 
-%define Partial_Interations1 0X6
-%define Partial_Interations2 0X2a
+%define Partial_Interations1 0X7
+%define Partial_Interations2 0X29
 
 %define SIZEOF_MINIITERATION 0x4
 %define SIZEOF_COPYLOOP 12
