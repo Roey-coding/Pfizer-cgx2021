@@ -1,18 +1,20 @@
 %define GIBBERISH 0xDEAD
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
-%define OFFSET 0x00
+%define ZOMBIE_LIFE_TIME 0x0CCCC
+
 jmp Zombie_catch_code
 code:
     MOVSW
     sub sp,bp
     
     STOSW
+    
 HERE:
 MOVSW
 ADD SP, DX
 MOVSW
-PUSH BX
+PUSH cx
 
 MOVSW
 MOVSW
@@ -23,7 +25,7 @@ CALL SP
 kill:
 db 0xcc
 movsw
-dec cx
+dec bx
 movsw
 movsw
 jz kill
@@ -65,11 +67,14 @@ mov bx, ax
 mov word [bx+OFFSET_AT_TURN], 0x26FF
 
 END:
+
 mov sp, 0x357
+mov bh, 0xff
 jmp common_code
 
 zombie_here:
 mov sp, 0x789
+mov bx, ZOMBIE_LIFE_TIME
 
 
 common_code:
@@ -83,7 +88,7 @@ pop ss
 add sp,ax
 
 mov si, ax
-add si,code - OFFSET 
+add si,code 
 mov cx, 0x30
 mov bp , 0x4
 loop:
@@ -93,22 +98,18 @@ loop:
     loop loop
 
 mov si, ax
-add si, HERE - OFFSET 
+add si, HERE 
 
-MOV BX, 0XA5A5
 MOV DX, 0x800; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
 MOV CX, 12; BYTES OF COPY LOOP CODE
 REP MOVSW
+MOV cX, 0XA5A5
 
-mov cx, 0xffff
-
-jmp after_code
-
-after_code:
 push ds
 push es
 pop ds
 pop es
+
 mov bp , 13
 xor si,si
 mov ax, 0xA59C
@@ -116,16 +117,6 @@ mov ax, 0xA59C
 mov di,sp
 push ax
 jmp sp
-
-stosw
-;stosw
-end:
-
-
-barzi:
-
-
-
 
 
 start_arr:
