@@ -1,13 +1,44 @@
 %define GIBBERISH 0xDEAD
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
-%define OFFSET 0x37
+%define OFFSET 0x00
+jmp Zombie_catch_code
+code:
+    MOVSW
+    sub sp,bp
+    
+    STOSW
+HERE:
+MOVSW
+ADD SP, DX
+MOVSW
+PUSH BX
 
+MOVSW
+MOVSW
+movsw
+mov DI,SP
+CALL SP
+
+kill:
+db 0xcc
+movsw
+dec cx
+movsw
+movsw
+jz kill
+MOVSW
+MOVSW
+XOR SI, SI
+MOVSW
+
+
+Zombie_catch_code:
 mov bx, ax
-add ax, zombie_here
-mov [bx + zombie_here + 1], ax
+mov [bx + common_code + 1], ax
 add bx, start_arr
 
+add ax, zombie_here
 mov [JMP_WITH], ax
 
 ; clear slots
@@ -34,7 +65,14 @@ mov bx, ax
 mov word [bx+OFFSET_AT_TURN], 0x26FF
 
 END:
+mov sp, 0x357
+jmp common_code
+
 zombie_here:
+mov sp, 0x789
+
+
+common_code:
 mov ax, 0000
 
 push ss
@@ -42,7 +80,7 @@ pop es
 push cs
 pop ss
 
-mov sp, ax
+add sp,ax
 
 mov si, ax
 add si,code - OFFSET 
@@ -65,50 +103,27 @@ REP MOVSW
 mov cx, 0xffff
 
 jmp after_code
-code:
-    MOVSW
-    sub sp,bp
-    
-    STOSW
+
 after_code:
 push ds
 push es
 pop ds
 pop es
 mov bp , 13
-mov di, ax
-add di,end - OFFSET 
 xor si,si
 mov ax, 0xA59C
+
+mov di,sp
+push ax
+jmp sp
+
 stosw
 ;stosw
 end:
 
 
 barzi:
-HERE:
-MOVSW
-ADD SP, DX
-MOVSW
-PUSH BX
 
-MOVSW
-MOVSW
-movsw
-mov DI,SP
-CALL SP
-
-kill:
-db 0xcc
-movsw
-dec cx
-movsw
-movsw
-jz kill
-MOVSW
-MOVSW
-XOR SI, SI
-MOVSW
 
 
 
