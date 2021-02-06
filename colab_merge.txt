@@ -1,13 +1,17 @@
-%define GIBBERISH 0xDEAD
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
 %define ZOMBIE_LIFE_TIME 0x0CCC
-%define SURVIVOR_LIFE_TIME 0xff
-%define MOVSW_PUSHF 0xA59C
 %define SURVIVOR_SP 0x357
 %define ZOMBIE_SP 0x789
 %define CAPTURE_OP 0x26FF
+%define ITERATIONS_AMOUNT 0X30
+%define SIZEOF_MINIITERATION 0x4
+%define SIZEOF_COPYLOOP 12
+%define JUMP_OFFSET 0x800
+%define BOMBING_GAP 0x13
 
+%define MOVSW_PUSHF 0xA59C
+%define SURVIVOR_LIFE_TIME 0xff
 
 jmp Zombie_catch_code
 code:
@@ -95,17 +99,17 @@ add sp,bx
 
 lea si, [bx + code]
 
-mov cx, 0x30
+mov cx, ITERATIONS_AMOUNT
 loop:
     movsw
     movsw
-    sub si, 0x4
+    sub si, SIZEOF_MINIITERATION
     loop loop
 
 lea si,[bx + HERE]
 
-MOV bx, 0x800; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
-MOV CL, 12; BYTES OF COPY LOOP CODE
+MOV bx, JUMP_OFFSET; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
+MOV CL, SIZEOF_COPYLOOP; BYTES OF COPY LOOP CODE
 REP MOVSW
 MOV CL, 0XA5
 
@@ -114,7 +118,7 @@ push es
 pop ds
 pop es
 
-mov bp , 13
+mov bp , BOMBING_GAP
 xor si,si
 mov ax, MOVSW_PUSHF
 
