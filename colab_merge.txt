@@ -1,10 +1,11 @@
 %define GIBBERISH 0xDEAD
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
-push ax
+
 mov bx, ax
-add bx, start_arr
 add ax, zombie_here
+mov [bx + zombie_here + 1], ax
+add bx, start_arr
 
 mov [JMP_WITH], ax
 
@@ -32,9 +33,10 @@ mov bx, ax
 mov word [bx+OFFSET_AT_TURN], 0x26FF
 
 END:
-
-zombie_here:
 pop ax
+zombie_here:
+mov ax, 0000
+
 push ss
 pop es
 push cs
