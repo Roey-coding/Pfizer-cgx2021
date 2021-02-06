@@ -1,6 +1,7 @@
 %define GIBBERISH 0xDEAD
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
+%define OFFSET 0x37
 
 mov bx, ax
 add ax, zombie_here
@@ -33,7 +34,6 @@ mov bx, ax
 mov word [bx+OFFSET_AT_TURN], 0x26FF
 
 END:
-pop ax
 zombie_here:
 mov ax, 0000
 
@@ -45,7 +45,7 @@ pop ss
 mov sp, ax
 
 mov si, ax
-add si,code
+add si,code - OFFSET 
 mov cx, 0x30
 mov bp , 0x4
 loop:
@@ -55,7 +55,7 @@ loop:
     loop loop
 
 mov si, ax
-add si, HERE
+add si, HERE - OFFSET 
 
 MOV BX, 0XA5A5
 MOV DX, 0x800; must be the COPYJUMP + the code advancment+ bp*times we bomb in the main loop
@@ -77,7 +77,7 @@ pop ds
 pop es
 mov bp , 13
 mov di, ax
-add di,end
+add di,end - OFFSET 
 xor si,si
 mov ax, 0xA59C
 stosw
