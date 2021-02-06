@@ -96,11 +96,10 @@ add sp,bx
 lea si, [bx + code]
 
 mov cx, 0x30
-mov bp , 0x4
 loop:
     movsw
     movsw
-    sub si, bp
+    sub si, 0x4
     loop loop
 
 lea si,[bx + HERE]
