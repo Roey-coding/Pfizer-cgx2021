@@ -1,7 +1,7 @@
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
 %define ZOMBIE_LIFE_TIME 0x02CC
-%define SURVIVOR_SP 0x789
+%define SURVIVOR_SP 0x699
 %define ZOMBIE_SP 0x50
 %define CAPTURE_OP 0x26FF
 %define ITERATIONS_AMOUNT 0X30
@@ -18,6 +18,30 @@
 %define SURVIVOR_LIFE_TIME 0xff
 
 jmp Zombie_catch_code
+buffer:
+MOVSW
+MOVSW
+MOVSW
+MOVSW
+xlatb                   ;al = startL^startH
+xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
+xlatb                   ;al = startL
+xor ah, al
+push ss
+pop es
+push cs
+pop ss
+push ss
+pop es
+push cs
+pop ss
+    MOVSW
+    sub sp,bp
+    
+    STOSW
+    xor ax, [0xA300] ; 1/4 
+    xor ax, [0x2300] ; 1/4 
+    xor ax, [0xC300] ; 1/2
 code:
     MOVSW
     sub sp,bp
@@ -72,17 +96,19 @@ add bx, start_arr
 add ax, zombie_here
 mov [JMP_WITH], ax
 
+nop
+nop
 ; clear slots
 xor ax, ax
-mov [0xC100], ax ; 49152, half
-mov [0xA100], ax ; quarter #1
-mov [0x2100], ax ; quarter #2
+mov [0xC300], ax ; 49152, half
+mov [0xA300], ax ; quarter #1
+mov [0x2300], ax ; quarter #2
 
-nop
+
 check:
-    xor ax, [0xA100] ; 1/4 
-    xor ax, [0x2100] ; 1/4 
-    xor ax, [0xC100] ; 1/2
+    xor ax, [0xA300] ; 1/4 
+    xor ax, [0x2300] ; 1/4 
+    xor ax, [0xC300] ; 1/2
 jz check
 
 xlatb                   ;al = startL^startH
