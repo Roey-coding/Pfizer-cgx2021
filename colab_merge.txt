@@ -2,6 +2,12 @@
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
 %define ZOMBIE_LIFE_TIME 0x0CCCC
+%define SURVIVOR_LIFE_TIME 0xff
+%define MOVSW_PUSHF 0xA59C
+%define SURVIVOR_SP 0x357
+%define ZOMBIE_SP 0x789
+%define CAPTURE_OP 0x26FF
+
 
 jmp Zombie_catch_code
 code:
@@ -64,21 +70,21 @@ xor ah, al
 ; ax = zombie base address
 
 mov bx, ax
-mov word [bx+OFFSET_AT_TURN], 0x26FF
+mov word [bx+OFFSET_AT_TURN], CAPTURE_OP
 
 END:
 
-mov sp, 0x357
-mov bh, 0xff
+mov sp, SURVIVOR_SP
+mov bh, SURVIVOR_LIFE_TIME
 jmp common_code
 
 zombie_here:
-mov sp, 0x789
+mov sp, ZOMBIE_SP
 mov bx, ZOMBIE_LIFE_TIME
 
 
 common_code:
-mov ax, 0000
+mov ax, 0000    
 
 push ss
 pop es
@@ -112,7 +118,7 @@ pop es
 
 mov bp , 13
 xor si,si
-mov ax, 0xA59C
+mov ax, MOVSW_PUSHF
 
 mov di,sp
 push ax
