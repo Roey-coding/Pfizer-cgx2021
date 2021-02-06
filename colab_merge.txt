@@ -1,10 +1,17 @@
 %define OFFSET_AT_TURN 0x70
 %define JMP_WITH 0xF8E2
+
 %define ZOMBIE_LIFE_TIME 0x02cc
 %define SURVIVOR_SP 0x050
-%define ZOMBIE_SP 0x700
+
+%define ZOMBIE_SP 0x789
+
 %define CAPTURE_OP 0x26FF
 %define ITERATIONS_AMOUNT 0X30
+
+%define Partial_Interations1 0X6
+%define Partial_Interations2 0X2a
+
 %define SIZEOF_MINIITERATION 0x4
 %define SIZEOF_COPYLOOP 12
 %define JUMP_OFFSET 0x800
@@ -48,6 +55,21 @@ MOVSW
 Zombie_catch_code:
 mov bx, ax
 mov [bx + common_code + 1], ax
+
+
+push ss
+pop es
+push cs
+pop ss
+lea si, [ bx+code ]
+mov cx, Partial_Interations1
+loop1:
+    movsw
+    movsw
+    sub si, SIZEOF_MINIITERATION
+    loop loop1
+sub si, bx
+
 add bx, start_arr
 
 add ax, zombie_here
@@ -80,26 +102,31 @@ END:
 
 mov sp, SURVIVOR_SP
 mov dh, SURVIVOR_LIFE_TIME
+mov cl, Partial_Interations2
 jmp common_code
 
 zombie_here:
 mov sp, ZOMBIE_SP
 mov dx, ZOMBIE_LIFE_TIME
+mov cx, ITERATIONS_AMOUNT
 
-
-common_code:
-mov bx, 0000    
+  
 
 push ss
 pop es
 push cs
 pop ss
+mov si, code
+
+common_code:
+mov bx, 0000  
 
 add sp,bx
+add si,bx
 
-lea si, [bx + code]
 
-mov cx, ITERATIONS_AMOUNT
+
+
 loop:
     movsw
     movsw
