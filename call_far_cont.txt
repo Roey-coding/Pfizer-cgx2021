@@ -1,0 +1,41 @@
+%define CODE_JUMP 0x600
+%define STACK_JUMP 0x200
+
+
+mov cx , ((end_Copy - start_Copy)/ 2)
+mov bp, ax
+lea si, [bp + start_Copy]
+rep movsw
+
+push ds 
+push es
+pop ds
+pop es
+
+mov bx , 0x50
+mov al , 0xA3
+mov [bx] , ax
+mov [bx + 2] , cs
+
+push cs
+pop ss
+mov sp, ax ;put sp in the right place
+
+jmp start
+
+start_Copy:
+call far [bx]
+rep movsw
+
+start:
+sub word [bx], CODE_JUMP
+sub sp, STACK_JUMP
+
+mov di, [bx]
+mov cl, (end_Copy-start)/2
+xor si,si
+movsw
+dec di
+call far [bx]
+
+end_Copy:
