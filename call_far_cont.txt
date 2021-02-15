@@ -26,6 +26,7 @@ mov dx, 0xabcd ; timer
 
 sub word [bx], CODE_JUMP
 mov di, [bx]
+add di, 0x10 * CS_OFFSET
 jmp start_first_time
 
 start_Copy:
@@ -35,12 +36,12 @@ rep movsw
 start:
 sub word [bx], CODE_JUMP
 mov di, sp
-sub di, CODE_JUMP - 0x10
+sub di, CODE_JUMP + 0x10 * CS_OFFSET 
+add di, 0x10 * CS_OFFSET
 start_first_time:
 sub sp, STACK_JUMP
 
 ;mov di, [bx]
-add di, 0x10 * CS_OFFSET
 mov cl, (end_Copy-start)/2
 xor si,si
 dec dx
