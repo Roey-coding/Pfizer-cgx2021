@@ -7,15 +7,16 @@ mov bp, ax
 lea si, [bp + start_Copy]
 rep movsw
 
+mov bx , di
+mov al , 0xA3
+stosw
+
 push ds 
 push es
 pop ds
 pop es
 
-mov bx , 0x50
-mov al , 0xA3
-mov [bx] , ax
-mov word [bx + 2] , 0x01000 + CS_OFFSET
+mov word [di] , 0x1000 + CS_OFFSET
 
 push cs
 pop ss
