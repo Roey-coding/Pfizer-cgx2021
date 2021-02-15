@@ -24,7 +24,9 @@ mov sp, ax ;put sp in the right place
 
 mov dx, 0xabcd ; timer
 
-jmp start
+sub word [bx], CODE_JUMP
+mov di, [bx]
+jmp start_first_time
 
 start_Copy:
 call far [bx]
@@ -32,9 +34,12 @@ rep movsw
 
 start:
 sub word [bx], CODE_JUMP
+mov di, sp
+sub di, CODE_JUMP - 0x10
+start_first_time:
 sub sp, STACK_JUMP
 
-mov di, [bx]
+;mov di, [bx]
 add di, 0x10 * CS_OFFSET
 mov cl, (end_Copy-start)/2
 xor si,si
