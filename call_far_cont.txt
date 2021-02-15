@@ -32,6 +32,8 @@ rep movsw
 
 start:
 sub word [bx], CODE_JUMP
+mov di, sp
+sub di, CODE_JUMP
 sub sp, STACK_JUMP
 
 mov di, [bx]
