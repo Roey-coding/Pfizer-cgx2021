@@ -1,6 +1,6 @@
 %define CODE_JUMP 0x600
 %define STACK_JUMP 0x200
-
+%define CS_OFFSET 0x1
 
 mov cx , ((end_Copy - start_Copy)/ 2)
 mov bp, ax
@@ -15,7 +15,7 @@ pop es
 mov bx , 0x50
 mov al , 0xA3
 mov [bx] , ax
-mov [bx + 2] , cs
+mov word [bx + 2] , 0x01000 + CS_OFFSET
 
 push cs
 pop ss
@@ -32,10 +32,12 @@ sub word [bx], CODE_JUMP
 sub sp, STACK_JUMP
 
 mov di, [bx]
+add di, 0x10 * CS_OFFSET
 mov cl, (end_Copy-start)/2
 xor si,si
 movsw
 dec di
 call far [bx]
+nop
 
 end_Copy:
