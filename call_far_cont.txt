@@ -27,26 +27,52 @@ mov dx, 0xabcd ; timer
 sub word [bx], CODE_JUMP
 mov di, [bx]
 add di, 0x10 * CS_OFFSET
-jmp start_first_time
 
-start_Copy:
-call far [bx]
-rep movsw
-
-start:
-sub word [bx], CODE_JUMP
-sub di, CODE_JUMP + (end_Copy-start)+3 ; why 3? idk
-start_first_time:
 sub sp, STACK_JUMP
 
-mov cl, (end_Copy-start)/2
-xor si,si
+mov si,start - start_Copy
 dec dx
 jz kill
 movsw
 dec di
 call far [bx]
+
+start_Copy:
+
+dec dx
+movsw
+movsw
+jz kill
+movsw
+movsw
+movsw
+movsw
+movsw
+movsw
+sub di, CODE_JUMP + (end_Copy-start_Copy - 1) ; why 3? idk
+movsw
+dec di
+call far [bx]
 nop
+start:
+call far [bx]
+movsw
+
+
+movsw
+movsw
+movsw
+movsw
+sub word [bx], CODE_JUMP
+movsw
+movsw
+movsw
+sub sp, STACK_JUMP
+movsw
+movsw
+xor si,si
+movsw
+movsw
 end_Copy:
 ;need to make sure kill lands on a byte from cs of the call far bombing that kills for sure
 kill:
