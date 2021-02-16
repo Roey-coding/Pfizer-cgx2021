@@ -23,6 +23,9 @@ pop ss
 mov sp, ax ;put sp in the right place
 
 mov dx, 0xabcd ; timer
+mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
+mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 1) ;
+mov bp, CODE_JUMP
 
 sub word [bx], CODE_JUMP
 mov di, [bx]
@@ -47,29 +50,25 @@ movsw
 movsw
 movsw
 movsw
-movsw
-movsw
-sub di, CODE_JUMP + (end_Copy-start_Copy - 1) ; why 3? idk
+sub di, [bx + si]
 movsw
 dec di
 call far [bx]
 nop
 start:
+update_di_si_flag:
 call far [bx]
 movsw
 
 
 movsw
 movsw
+sub word [bx], bp
+movsw
+sub sp, [bx + si]
 movsw
 movsw
-sub word [bx], CODE_JUMP
-movsw
-movsw
-movsw
-sub sp, STACK_JUMP
-movsw
-movsw
+update_sp_si_flag:
 xor si,si
 movsw
 movsw
