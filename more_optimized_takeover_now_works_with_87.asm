@@ -1,5 +1,91 @@
-;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
+%define BYTE_AFTER_DESIGNATED_JUMP 0xF8E2
+%define DESIGNATED_JUMP_POSITION 0x70
+%define OPCODE_FOR_JMP 0xA5FF
+%define FIRST64 0x3E00
+%define SECOND64 0xDE00
+%define THIRD64 0x5E00
+%define FIRST32 0x3C00
+%define SECOND32 0xDC00
+%define THIRD32 0x5C00
+%define FIRST16 0xD800
+%define SECOND16 0x3800
+%define THIRD16 0x5800
+%define FIRST8 0x3000
+%define SECOND8 0xD000
+%define THIRD8 0x5000
+%define FIRST4 0x2000
 
+%define ZOMBPLUS 0x0100
+%define CARPET 0xF0F1
+
+%define FIRST_ITERATION 41
+%define REAL_OPS_BEFORE_TREE 23
+%define NOPS 10
+
+mov bx, ax
+add bx, start_arr
+
+NRG:
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+WAIT
+jmp NRG
+
+
+mov cx, CARPET
+mov [FIRST64 + ZOMBPLUS], cx
+mov [SECOND64 + ZOMBPLUS], cx
+mov [THIRD64 + ZOMBPLUS], cx
+mov [FIRST32 + ZOMBPLUS], cx
+mov [SECOND32 + ZOMBPLUS], cx
+mov [THIRD32 + ZOMBPLUS], cx
+mov [FIRST16 + ZOMBPLUS], cx
+mov [SECOND16 + ZOMBPLUS], cx
+mov [THIRD16 + ZOMBPLUS], cx
+mov [FIRST8 + ZOMBPLUS], cx
+mov [SECOND8 + ZOMBPLUS], cx
+mov [THIRD8 + ZOMBPLUS], cx
+mov [FIRST4 + ZOMBPLUS], cx
+
+mov dx, ax
+add dx, zombie_here
+mov word [BYTE_AFTER_DESIGNATED_JUMP], dx
+
+xor ax, ax
+check:
+	; This next line should be executed at step 41
+    xor ax, [FIRST64 + ZOMBPLUS]
+    xor ax, [SECOND64 + ZOMBPLUS]
+    xor ax, [THIRD64 + ZOMBPLUS]
+    xor ax, [FIRST32 + ZOMBPLUS]
+    xor ax, [SECOND32 + ZOMBPLUS]
+    xor ax, [THIRD32 + ZOMBPLUS]
+    xor ax, [FIRST16 + ZOMBPLUS]
+    xor ax, [SECOND16 + ZOMBPLUS]
+    xor ax, [THIRD16 + ZOMBPLUS]
+    xor ax, [FIRST8 + ZOMBPLUS]
+    xor ax, [SECOND8 + ZOMBPLUS]
+    xor ax, [THIRD8 + ZOMBPLUS]
+    xor ax, [FIRST4 + ZOMBPLUS]
+
+;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
 
 ; This'll be once we have finished all the xor's, 
 ; we'd like to have around 95% certainty that we'd hit a zombie written code by now.
@@ -9,15 +95,41 @@ xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
 xlatb                   ;al = startL
 xor ah, al
 
+
 ; ax = zombie base address
 
 mov bx, ax
-mov word [bx+OFFSET_AT_TURN], 0x26FF
+mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP
+
+push ds
+pop es
+mov di, 0
+mov ax, 0x0200 ;little indi
+mov dx, 0xE3D1 ;little indi
+mov bx, 0x0200
+mov cx, OPCODE_FOR_JMP 
+int 0x87
+
+main_loop:
+
+
+jmp main_loop
+
 
 END:
 jmp END
 
 zombie_here:
+; Change to add int 87
+push ds
+pop es
+mov di, 0
+mov ax, 0x0200 ;little indi
+mov dx, 0xE3D1 ;little indi
+mov bx, 0x0200
+mov cx, OPCODE_FOR_JMP 
+nop
+int 0x87
 jmp zombie_here
 
 start_arr:

@@ -21,6 +21,49 @@
 %define FIRST_ITERATION 41
 %define REAL_OPS_BEFORE_TREE 23
 %define NOPS 10
+%define OPCODES_AFTER_NRG 19
+%define ITERATIONS_AFTER_NRG 13
+%define JUMP_NRG_BYTE 23
+%define DOUBLE_NOP 0x9090
+
+xchg ax, bx
+
+; Add find other zombie position
+push ds
+push es
+pop ds
+pop es
+lodsw
+push ds
+push es
+pop ds
+pop es
+
+xchg ax, bx
+
+; Dead stuffs
+mov cx, 11
+dead_iterations:
+loop dead_iterations
+
+mov cx, CARPET
+mov [FIRST64 + ZOMBPLUS], cx
+mov [SECOND64 + ZOMBPLUS], cx
+mov [THIRD64 + ZOMBPLUS], cx
+mov [FIRST32 + ZOMBPLUS], cx
+mov [SECOND32 + ZOMBPLUS], cx
+
+; Realese second survivor
+mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
+
+mov [THIRD32 + ZOMBPLUS], cx
+mov [FIRST16 + ZOMBPLUS], cx
+mov [SECOND16 + ZOMBPLUS], cx
+mov [THIRD16 + ZOMBPLUS], cx
+mov [FIRST8 + ZOMBPLUS], cx
+mov [SECOND8 + ZOMBPLUS], cx
+mov [THIRD8 + ZOMBPLUS], cx
+mov [FIRST4 + ZOMBPLUS], cx
 
 mov bx, ax
 add bx, start_arr
@@ -29,30 +72,9 @@ mov dx, ax
 add dx, zombie_here
 mov word [BYTE_AFTER_DESIGNATED_JUMP], dx
 
-mov cx, NOPS
-
-NOPS_ITERATION:
-nop
-loop NOPS_ITERATION
-
-mov dx, ax
-mov ax, CARPET
-mov [FIRST64 + ZOMBPLUS], ax
-mov [SECOND64 + ZOMBPLUS], ax
-mov [THIRD64 + ZOMBPLUS], ax
-mov [FIRST32 + ZOMBPLUS], ax
-mov [SECOND32 + ZOMBPLUS], ax
-mov [THIRD32 + ZOMBPLUS], ax
-mov [FIRST16 + ZOMBPLUS], ax
-mov [SECOND16 + ZOMBPLUS], ax
-mov [THIRD16 + ZOMBPLUS], ax
-mov [FIRST8 + ZOMBPLUS], ax
-mov [SECOND8 + ZOMBPLUS], ax
-mov [THIRD8 + ZOMBPLUS], ax
-mov [FIRST4 + ZOMBPLUS], ax
-
 xor ax, ax
 check:
+	; This next line should be executed at step 41
     xor ax, [FIRST64 + ZOMBPLUS]
     xor ax, [SECOND64 + ZOMBPLUS]
     xor ax, [THIRD64 + ZOMBPLUS]
@@ -77,6 +99,7 @@ xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
 xlatb                   ;al = startL
 xor ah, al
 
+
 ; ax = zombie base address
 
 mov bx, ax
@@ -90,6 +113,9 @@ mov dx, 0xE3D1 ;little indi
 mov bx, 0x0200
 mov cx, OPCODE_FOR_JMP 
 int 0x87
+
+
+
 
 END:
 jmp END
