@@ -2,11 +2,43 @@
 %define STACK_JUMP 0x200
 %define CS_OFFSET -0x1
 
+delete_this:
+    mov [0], ax
+    add word [0], zombie
 mov cx , ((end_Copy - start_Copy)/ 2)
 mov bp, ax
 lea si, [bp + start_Copy]
 rep movsw
 
+jmp after_zombie
+zombie:
+    mov bx , di
+    mov al , 0xA3
+    stosw
+
+    push ds 
+    push es
+    pop ds
+    pop es
+
+    mov word [di] , 0x1000 + CS_OFFSET
+
+    push cs
+    pop ss
+    ;mov sp, ax ;put sp in the right place
+
+    mov dx, 0xabcd ; timer
+    mov bp, CODE_JUMP
+
+    sub word [bx], CODE_JUMP
+    mov di, [bx]
+    add di, 0x10 * CS_OFFSET + 0x8000
+    ;add di, ax
+    sub sp, STACK_JUMP -0x8000
+
+    mov si,start - start_Copy
+    call far [bx]
+after_zombie:
 mov bx , di
 mov al , 0xA3
 stosw
@@ -52,6 +84,7 @@ movsw
 sub di, [bx + si]
 movsw
 dec di
+call_far:
 call far [bx]
 
 start:
