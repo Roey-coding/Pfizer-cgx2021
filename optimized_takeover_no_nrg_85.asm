@@ -73,21 +73,20 @@ add dx, zombie_here
 mov word [BYTE_AFTER_DESIGNATED_JUMP], dx
 
 xor ax, ax
-check:
-	; This next line should be executed at step 41
-    xor ax, [FIRST64 + ZOMBPLUS]
-    xor ax, [SECOND64 + ZOMBPLUS]
-    xor ax, [THIRD64 + ZOMBPLUS]
-    xor ax, [FIRST32 + ZOMBPLUS]
-    xor ax, [SECOND32 + ZOMBPLUS]
-    xor ax, [THIRD32 + ZOMBPLUS]
-    xor ax, [FIRST16 + ZOMBPLUS]
-    xor ax, [SECOND16 + ZOMBPLUS]
-    xor ax, [THIRD16 + ZOMBPLUS]
-    xor ax, [FIRST8 + ZOMBPLUS]
-    xor ax, [SECOND8 + ZOMBPLUS]
-    xor ax, [THIRD8 + ZOMBPLUS]
-    xor ax, [FIRST4 + ZOMBPLUS]
+; This next line should be executed at step 41
+xor ax, [FIRST64 + ZOMBPLUS]
+xor ax, [SECOND64 + ZOMBPLUS]
+xor ax, [THIRD64 + ZOMBPLUS]
+xor ax, [FIRST32 + ZOMBPLUS]
+xor ax, [SECOND32 + ZOMBPLUS]
+xor ax, [THIRD32 + ZOMBPLUS]
+xor ax, [FIRST16 + ZOMBPLUS]
+xor ax, [SECOND16 + ZOMBPLUS]
+xor ax, [THIRD16 + ZOMBPLUS]
+xor ax, [FIRST8 + ZOMBPLUS]
+xor ax, [SECOND8 + ZOMBPLUS]
+xor ax, [THIRD8 + ZOMBPLUS]
+xor ax, [FIRST4 + ZOMBPLUS]
 
 ;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
 
@@ -114,9 +113,6 @@ mov bx, 0x0200
 mov cx, OPCODE_FOR_JMP 
 int 0x87
 
-
-
-
 END:
 jmp END
 
@@ -129,7 +125,6 @@ mov ax, 0x0200 ;little indi
 mov dx, 0xE3D1 ;little indi
 mov bx, 0x0200
 mov cx, OPCODE_FOR_JMP 
-nop
 int 0x87
 jmp zombie_here
 

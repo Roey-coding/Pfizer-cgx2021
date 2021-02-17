@@ -75,21 +75,20 @@ xor ax, ax
 infinite:
 jmp infinite
 
-check:
 	; This next line should be executed at step 41
-    xor ax, [FIRST64 + ZOMBPLUS]
-    xor ax, [SECOND64 + ZOMBPLUS]
-    xor ax, [THIRD64 + ZOMBPLUS]
-    xor ax, [FIRST32 + ZOMBPLUS]
-    xor ax, [SECOND32 + ZOMBPLUS]
-    xor ax, [THIRD32 + ZOMBPLUS]
-    xor ax, [FIRST16 + ZOMBPLUS]
-    xor ax, [SECOND16 + ZOMBPLUS]
-    xor ax, [THIRD16 + ZOMBPLUS]
-    xor ax, [FIRST8 + ZOMBPLUS]
-    xor ax, [SECOND8 + ZOMBPLUS]
-    xor ax, [THIRD8 + ZOMBPLUS]
-    xor ax, [FIRST4 + ZOMBPLUS]
+xor ax, [FIRST64 + ZOMBPLUS]
+xor ax, [SECOND64 + ZOMBPLUS]
+xor ax, [THIRD64 + ZOMBPLUS]
+xor ax, [FIRST32 + ZOMBPLUS]
+xor ax, [SECOND32 + ZOMBPLUS]
+xor ax, [THIRD32 + ZOMBPLUS]
+xor ax, [FIRST16 + ZOMBPLUS]
+xor ax, [SECOND16 + ZOMBPLUS]
+xor ax, [THIRD16 + ZOMBPLUS]
+xor ax, [FIRST8 + ZOMBPLUS]
+xor ax, [SECOND8 + ZOMBPLUS]
+xor ax, [THIRD8 + ZOMBPLUS]
+xor ax, [FIRST4 + ZOMBPLUS]
 
 ;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
 
@@ -101,18 +100,11 @@ xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
 xlatb                   ;al = startL
 xor ah, al
 
-
 ; ax = zombie base address
 
 mov bx, ax
-mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP
-
-mov cx, 16
-s:
-loop s
-db 0xcc
-
-
+mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
+; POSSIBLE OPCODES: E2F8, E63F, 0089; 0100-0800, F8E2, 8346, 3FE6, EB3F, CCCC
 push ds
 pop es
 mov di, 0
@@ -140,7 +132,6 @@ mov ax, 0x0200 ;little indi
 mov dx, 0xE3D1 ;little indi
 mov bx, 0x0200
 mov cx, OPCODE_FOR_JMP 
-nop
 int 0x87
 jmp zombie_here
 
