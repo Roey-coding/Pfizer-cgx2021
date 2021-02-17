@@ -1,6 +1,7 @@
 %define BYTE_AFTER_DESIGNATED_JUMP 0xF8E2
 %define DESIGNATED_JUMP_POSITION 0x70
 %define OPCODE_FOR_JMP 0xA5FF
+%define CCCC 0XCCCC
 %define FIRST64 0x3E00
 %define SECOND64 0xDE00
 %define THIRD64 0x5E00
@@ -70,7 +71,7 @@ add bx, start_arr
 
 mov dx, ax
 add dx, zombie_here
-mov word [BYTE_AFTER_DESIGNATED_JUMP], dx
+mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC 
 
 xor ax, ax
 ; This next line should be executed at step 41
