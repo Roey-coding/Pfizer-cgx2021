@@ -43,9 +43,16 @@ pop es
 xchg ax, bx
 
 ; Dead stuffs
-mov cx, 27
+mov cx, 24
 dead_iterations:
 loop dead_iterations
+
+;;;;;;;;;;;;;;;;;;;;;
+mov byte [CCCC], 0xB8
+mov word [CCCC + 1], bx
+mov byte [CCCC + 3], 0xE0FF
+
+;;;;end
 
 ; Realese second survivor
 mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
