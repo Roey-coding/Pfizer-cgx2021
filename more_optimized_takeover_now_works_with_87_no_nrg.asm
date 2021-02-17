@@ -23,7 +23,7 @@
 %define NOPS 10
 %define OPCODES_AFTER_NRG 19
 %define ITERATIONS_AFTER_NRG 13
-%define JUMP_NRG_BYTE 23
+%define JUMP_NRG_BYTE 19
 %define DOUBLE_NOP 0x9090
 
 xchg ax, bx
@@ -46,15 +46,15 @@ mov cx, 11
 dead_iterations:
 loop dead_iterations
 
+; Realese second survivor
+mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
+
 mov cx, CARPET
 mov [FIRST64 + ZOMBPLUS], cx
 mov [SECOND64 + ZOMBPLUS], cx
 mov [THIRD64 + ZOMBPLUS], cx
 mov [FIRST32 + ZOMBPLUS], cx
 mov [SECOND32 + ZOMBPLUS], cx
-
-; Realese second survivor
-mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
 
 mov [THIRD32 + ZOMBPLUS], cx
 mov [FIRST16 + ZOMBPLUS], cx

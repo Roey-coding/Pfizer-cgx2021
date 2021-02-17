@@ -15,7 +15,7 @@
 %define THIRD8 0x5000
 %define FIRST4 0x2000
 
-%define ZOMBPLUS 0x0100
+%define ZOMBPLUS 0x0200
 %define CARPET 0xF0F1
 
 %define FIRST_ITERATION 41
@@ -23,7 +23,7 @@
 %define NOPS 10
 %define OPCODES_AFTER_NRG 19
 %define ITERATIONS_AFTER_NRG 13
-%define JUMP_NRG_BYTE 19
+%define JUMP_NRG_BYTE 0x63
 %define DOUBLE_NOP 0x9090
 
 xchg ax, bx
@@ -42,14 +42,14 @@ pop es
 xchg ax, bx
 
 ; Dead stuffs
-mov cx, 15
+mov cx, 27
 dead_iterations:
 loop dead_iterations
 
 ; Realese second survivor
 mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
-db 0xcc
-mov cx, CARPET
+
+mov cx, CARPET					; Would you take a look at this beauty?
 mov [FIRST64 + ZOMBPLUS], cx
 mov [SECOND64 + ZOMBPLUS], cx
 mov [THIRD64 + ZOMBPLUS], cx

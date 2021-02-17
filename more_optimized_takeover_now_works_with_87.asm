@@ -22,6 +22,8 @@
 %define REAL_OPS_BEFORE_TREE 23
 %define NOPS 10
 
+stosw
+
 mov bx, ax
 add bx, start_arr
 
@@ -38,16 +40,7 @@ WAIT
 WAIT
 WAIT
 WAIT
-WAIT
-WAIT
-WAIT
-WAIT
-WAIT
-WAIT
-WAIT
-WAIT
 jmp NRG
-
 
 mov cx, CARPET
 mov [FIRST64 + ZOMBPLUS], cx
