@@ -24,8 +24,9 @@
 %define NOPS 10
 %define OPCODES_AFTER_NRG 19
 %define ITERATIONS_AFTER_NRG 13
-%define JUMP_NRG_BYTE 0x63
+%define JUMP_NRG_BYTE 0x65
 %define DOUBLE_NOP 0x9090
+%define DEADS 17
 
 xchg ax, bx
 
@@ -41,16 +42,18 @@ pop ds
 pop es
 
 xchg ax, bx
-
 ; Dead stuffs
-mov cx, 24
+mov cx, DEADS
 dead_iterations:
 loop dead_iterations
 
-;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;
+mov dx, ax
+add dx, zombie_here
 mov byte [CCCC], 0xB8
-mov word [CCCC + 1], bx
-mov byte [CCCC + 3], 0xE0FF
+mov word [CCCC + 1], dx
+mov word [CCCC + 3], 0xE0FF
+mov word [0x26FF], CCCC
 
 ;;;;end
 
@@ -76,8 +79,7 @@ mov [FIRST4 + ZOMBPLUS], cx
 mov bx, ax
 add bx, start_arr
 
-mov dx, ax
-add dx, zombie_here
+
 mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC 
 
 xor ax, ax

@@ -2,7 +2,7 @@
 
 push ds
 pop es
-mov ax, 0xcc
-mov dx, 0xcc
+mov ax, 0xFF26
+mov dx, 0xFF26
 mov di, ADDR
 int 0x86
