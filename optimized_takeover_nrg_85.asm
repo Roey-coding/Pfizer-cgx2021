@@ -53,9 +53,6 @@ WAIT
 loop NRG
 
 mov cx, CARPET
-mov [FIRST64 + ZOMBPLUS], cx
-mov [SECOND64 + ZOMBPLUS], cx
-mov [THIRD64 + ZOMBPLUS], cx
 mov [FIRST32 + ZOMBPLUS], cx
 mov [SECOND32 + ZOMBPLUS], cx
 mov [THIRD32 + ZOMBPLUS], cx
@@ -71,15 +68,13 @@ mov dx, ax
 add dx, zombie_here
 mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC
 
-xor ax, ax
+mov ax, CARPET
 
 infinite:
 jmp infinite
 
 	; This next line should be executed at step 41
-xor ax, [FIRST64 + ZOMBPLUS]
-xor ax, [SECOND64 + ZOMBPLUS]
-xor ax, [THIRD64 + ZOMBPLUS]
+
 xor ax, [FIRST32 + ZOMBPLUS]
 xor ax, [SECOND32 + ZOMBPLUS]
 xor ax, [THIRD32 + ZOMBPLUS]
@@ -109,9 +104,9 @@ mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
 push ds
 pop es
 mov di, 0
-mov ax, 0x0200 ;little indi
+mov ax, 0x0300 ;little indi
 mov dx, 0xE3D1 ;little indi
-mov bx, 0x0200
+mov bx, 0x0300
 mov cx, OPCODE_FOR_JMP 
 int 0x87
 
@@ -129,9 +124,9 @@ zombie_here:
 push ds
 pop es
 mov di, 0
-mov ax, 0x0200 ;little indi
+mov ax, 0x0300 ;little indi
 mov dx, 0xE3D1 ;little indi
-mov bx, 0x0200
+mov bx, 0x0300
 mov cx, OPCODE_FOR_JMP 
 int 0x87
 jmp zombie_here

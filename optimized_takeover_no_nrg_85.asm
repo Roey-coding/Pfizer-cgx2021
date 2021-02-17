@@ -24,9 +24,9 @@
 %define NOPS 10
 %define OPCODES_AFTER_NRG 19
 %define ITERATIONS_AFTER_NRG 13
-%define JUMP_NRG_BYTE 0x65
+%define JUMP_NRG_BYTE 0x5A
 %define DOUBLE_NOP 0x9090
-%define DEADS 17
+%define DEADS 13
 
 xchg ax, bx
 
@@ -42,10 +42,7 @@ pop ds
 pop es
 
 xchg ax, bx
-; Dead stuffs
-mov cx, DEADS
-dead_iterations:
-loop dead_iterations
+
 
 ;;;;;;;;;;;;;;;;;;;;
 mov dx, ax
@@ -57,13 +54,8 @@ mov word [0x26FF], CCCC
 
 ;;;;end
 
-; Realese second survivor
-mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
 
 mov cx, CARPET					; Would you take a look at this beauty?
-mov [FIRST64 + ZOMBPLUS], cx
-mov [SECOND64 + ZOMBPLUS], cx
-mov [THIRD64 + ZOMBPLUS], cx
 mov [FIRST32 + ZOMBPLUS], cx
 mov [SECOND32 + ZOMBPLUS], cx
 
@@ -76,17 +68,25 @@ mov [SECOND8 + ZOMBPLUS], cx
 mov [THIRD8 + ZOMBPLUS], cx
 mov [FIRST4 + ZOMBPLUS], cx
 
+
+; Dead stuffs
+mov cx, DEADS
+dead_iterations:
+loop dead_iterations
+
+; Realese second survivor
+mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
+
 mov bx, ax
 add bx, start_arr
 
 
 mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC 
 
-xor ax, ax
+
+
+mov ax, CARPET
 ; This next line should be executed at step 41
-xor ax, [FIRST64 + ZOMBPLUS]
-xor ax, [SECOND64 + ZOMBPLUS]
-xor ax, [THIRD64 + ZOMBPLUS]
 xor ax, [FIRST32 + ZOMBPLUS]
 xor ax, [SECOND32 + ZOMBPLUS]
 xor ax, [THIRD32 + ZOMBPLUS]
