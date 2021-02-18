@@ -79,6 +79,8 @@ xor ax, ax
 infinite:
 jmp infinite
 
+db 0x00
+db 0x3D
 	; This next line should be executed at step 41
 	
 xor ax, [FIRST32 + ZOMBPLUS]	;nz
