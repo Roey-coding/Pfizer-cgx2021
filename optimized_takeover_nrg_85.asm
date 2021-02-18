@@ -17,6 +17,7 @@
 %define FIRST4 0x2000
 
 %define ZOMBPLUS 0x0100
+%define ZOMBPLUS87 0x0300
 %define CARPET 0xF0F1
 
 %define FIRST_ITERATION 41
@@ -104,9 +105,9 @@ mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
 push ds
 pop es
 mov di, 0
-mov ax, 0x0300 ;little indi
+mov ax, ZOMBPLUS87 ;little indi
 mov dx, 0xE3D1 ;little indi
-mov bx, 0x0300
+mov bx, ZOMBPLUS87
 mov cx, OPCODE_FOR_JMP 
 int 0x87
 
@@ -124,9 +125,9 @@ zombie_here:
 push ds
 pop es
 mov di, 0
-mov ax, 0x0300 ;little indi
+mov ax, ZOMBPLUS87 ;little indi
 mov dx, 0xE3D1 ;little indi
-mov bx, 0x0300
+mov bx, ZOMBPLUS87
 mov cx, OPCODE_FOR_JMP 
 int 0x87
 jmp zombie_here
