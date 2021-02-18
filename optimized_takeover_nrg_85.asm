@@ -1,7 +1,8 @@
 %define BYTE_AFTER_DESIGNATED_JUMP 0xF8E2
 %define DESIGNATED_JUMP_POSITION 0x70
 %define OPCODE_FOR_JMP 0xA5FF
-%define CCCC 0XCCCC
+%define CCCC 0xCCCC
+%define MEMORY_XCHANGE_AREA 0xDDDD
 %define FIRST64 0x3E00
 %define SECOND64 0xDE00
 %define THIRD64 0x5E00
@@ -28,7 +29,7 @@ jmp over_pad
 
 over_pad:
 
-stosw
+mov [MEMORY_XCHANGE_AREA], ax
 
 mov bx, ax
 add bx, start_arr

@@ -2,6 +2,7 @@
 %define DESIGNATED_JUMP_POSITION 0x70
 %define OPCODE_FOR_JMP 0xA5FF
 %define CCCC 0XCCCC
+%define MEMORY_XCHANGE_AREA 0xDDDD
 %define FIRST64 0x3E00
 %define SECOND64 0xDE00
 %define THIRD64 0x5E00
@@ -29,20 +30,9 @@
 %define DOUBLE_NOP 0x9090
 %define DEADS 25
 %define START_LIST 214
-xchg ax, bx
 
-; Add find other zombie position
-push ds
-push es
-pop ds
-pop es
-lodsw
-push ds
-push es
-pop ds
-pop es
-
-xchg ax, bx
+db 0x90
+mov bx, [MEMORY_XCHANGE_AREA]
 
 ;;;;;;;;;;;;;;;;;;;;
 mov dx, ax
