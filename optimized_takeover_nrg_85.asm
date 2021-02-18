@@ -11,6 +11,7 @@
 %define FIRST16 0xD800
 %define SECOND16 0x3800
 %define THIRD16 0x5800
+%define FOURTH16 0xF800
 %define FIRST8 0x3000
 %define SECOND8 0xD000
 %define THIRD8 0x5000
@@ -23,6 +24,9 @@
 %define FIRST_ITERATION 41
 %define REAL_OPS_BEFORE_TREE 23
 %define NOPS 10
+jmp over_pad
+
+over_pad:
 
 stosw
 
@@ -60,6 +64,7 @@ mov [THIRD32 + ZOMBPLUS], cx
 mov [FIRST16 + ZOMBPLUS], cx
 mov [SECOND16 + ZOMBPLUS], cx
 mov [THIRD16 + ZOMBPLUS], cx
+mov [FOURTH16 + ZOMBPLUS], cx
 mov [FIRST8 + ZOMBPLUS], cx
 mov [SECOND8 + ZOMBPLUS], cx
 mov [THIRD8 + ZOMBPLUS], cx
@@ -69,29 +74,38 @@ mov dx, ax
 add dx, zombie_here
 mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC
 
-mov ax, CARPET
+xor ax, ax
 
 infinite:
 jmp infinite
 
 	; This next line should be executed at step 41
-
-xor ax, [FIRST32 + ZOMBPLUS]
-xor ax, [SECOND32 + ZOMBPLUS]
-xor ax, [THIRD32 + ZOMBPLUS]
-xor ax, [FIRST16 + ZOMBPLUS]
-xor ax, [SECOND16 + ZOMBPLUS]
-xor ax, [THIRD16 + ZOMBPLUS]
-xor ax, [FIRST8 + ZOMBPLUS]
-xor ax, [SECOND8 + ZOMBPLUS]
-xor ax, [THIRD8 + ZOMBPLUS]
-xor ax, [FIRST4 + ZOMBPLUS]
-
+	
+xor ax, [FIRST32 + ZOMBPLUS]	;nz
+xor ax, [SECOND32 + ZOMBPLUS]	;z
+xor ax, [THIRD32 + ZOMBPLUS]	;nz
+xor ax, [FIRST16 + ZOMBPLUS]	;z
+xor ax, [SECOND16 + ZOMBPLUS]	;nz
+xor ax, [THIRD16 + ZOMBPLUS]	;z
+jz cont
+xor ax, CARPET
+jmp takeover
+cont:
+xor ax, [FOURTH16 + ZOMBPLUS]	;nz
+xor ax, [FIRST8 + ZOMBPLUS]		;z
+jz cont1
+xor ax, CARPET
+jmp takeover
+cont1:
+xor ax, [SECOND8 + ZOMBPLUS]	;nz
+xor ax, [THIRD8 + ZOMBPLUS]		;z
+xor ax, [FIRST4 + ZOMBPLUS]		;nz
 ;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
 
 ; This'll be once we have finished all the xor's, 
 ; we'd like to have around 95% certainty that we'd hit a zombie written code by now.
 
+takeover:
 xlatb                   ;al = startL^startH
 xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
 xlatb                   ;al = startL

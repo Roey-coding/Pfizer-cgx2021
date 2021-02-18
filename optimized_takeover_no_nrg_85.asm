@@ -25,7 +25,7 @@
 %define NOPS 10
 %define OPCODES_AFTER_NRG 19
 %define ITERATIONS_AFTER_NRG 13
-%define JUMP_NRG_BYTE 0x5A
+%define JUMP_NRG_BYTE 0x5F
 %define DOUBLE_NOP 0x9090
 %define DEADS 13
 
