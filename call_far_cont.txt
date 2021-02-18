@@ -7,17 +7,6 @@ delete_this:
     mov [0], ax
     add word [0], zombie
     
-mov byte [RANDOM_LOCATION], 0xA3
-mov byte [RANDOM_LOCATION+1], ah
-sub word [RANDOM_LOCATION], CODE_JUMP
-mov word [RANDOM_LOCATION+2], 0x1000 + CS_OFFSET
-;store on cs the long pointer
-
-mov cx , ((end_Copy - start_Copy)/ 2)
-mov bp, ax
-lea si, [bp + start_Copy]
-rep movsw
-
 jmp after_zombie
 zombie:
     push cs
@@ -31,12 +20,28 @@ zombie:
     movsw
     xor bx, bx
     
-    mov si, 30
+    mov si, start - start_Copy + 2
     pop ds
+    mov word [start - start_Copy + 10], STACK_JUMP
     pop es
     pop ss
+    mov sp, ax
+    mov bp, CODE_JUMP
     call far [bx]
 after_zombie:
+    
+mov byte [RANDOM_LOCATION], 0xA3
+mov byte [RANDOM_LOCATION+1], ah
+sub word [RANDOM_LOCATION], CODE_JUMP
+mov word [RANDOM_LOCATION+2], 0x1000 + CS_OFFSET
+;store on cs the long pointer
+
+mov cx , ((end_Copy - start_Copy)/ 2)
+mov bp, ax
+lea si, [bp + start_Copy]
+rep movsw
+
+
 mov bx , di
 mov al , 0xA3
 stosw
