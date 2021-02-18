@@ -27,7 +27,7 @@
 %define ITERATIONS_AFTER_NRG 13
 %define JUMP_NRG_BYTE 0x5F
 %define DOUBLE_NOP 0x9090
-%define DEADS 13
+%define DEADS 15
 
 xchg ax, bx
 
@@ -76,7 +76,12 @@ dead_iterations:
 loop dead_iterations
 
 ; Realese second survivor
-mov word [bx+JUMP_NRG_BYTE], DOUBLE_NOP
+mov word [bx+JUMP_NRG_BYTE], 0x0633
+mov word [bx+JUMP_NRG_BYTE], 0xcccc
+db 0xcc ;!!!!!!!!!!
+db 0xcc
+db 0xcc
+db 0xcc
 
 mov bx, ax
 add bx, start_arr

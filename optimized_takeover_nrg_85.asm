@@ -1,6 +1,6 @@
 %define BYTE_AFTER_DESIGNATED_JUMP 0xF8E2
 %define DESIGNATED_JUMP_POSITION 0x70
-%define OPCODE_FOR_JMP 0xA5FF
+%define OPCODE_FOR_JMP 0xCCCC
 %define CCCC 0XCCCC
 %define FIRST64 0x3E00
 %define SECOND64 0xDE00
@@ -33,7 +33,7 @@ stosw
 mov bx, ax
 add bx, start_arr
 
-mov cx, 3
+mov cx, 1
 NRG:
 WAIT
 WAIT
@@ -80,8 +80,9 @@ infinite:
 jmp infinite
 
 	; This next line should be executed at step 41
-	
-xor ax, [FIRST32 + ZOMBPLUS]	;nz
+db 0x00
+db 0x3D
+;xor ax, [FIRST32 + ZOMBPLUS]	;nz
 xor ax, [SECOND32 + ZOMBPLUS]	;z
 xor ax, [THIRD32 + ZOMBPLUS]	;nz
 xor ax, [FIRST16 + ZOMBPLUS]	;z
@@ -116,6 +117,14 @@ xor ah, al
 mov bx, ax
 mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
 ; POSSIBLE OPCODES: E2F8, E63F, 0089; 0100-0800, F8E2, 8346, 3FE6, EB3F, CCCC
+
+mov cx, 0x10	;!!!!!!!!!!!!!!!!
+loopi:
+loop loopi
+db 0xcc
+db 0xcc
+db 0xcc
+
 push ds
 pop es
 mov di, 0
