@@ -1,7 +1,7 @@
 %define CODE_JUMP 0x600
 %define STACK_JUMP 0x200
 %define CS_OFFSET -0x1
-%define RANDOM_LOCATION 0xDEAD
+%define ZOMBIES_TIMER 0X0122
 
 delete_this:
     mov [0], ax
@@ -9,7 +9,6 @@ delete_this:
     
 jmp after_zombie
 zombie:
-    push cs
 	
 	push ss
 	pop ds
@@ -17,6 +16,7 @@ zombie:
     push cs
 	pop es
 	
+	push cs
 	pop ss
 	
 	mov bx,0x50
@@ -25,14 +25,16 @@ zombie:
 	mov word [bx + 2], 0x1000 + CS_OFFSET
 	mov si,start - start_Copy + 2
 	
-    xor di,di
+    
     mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
 	mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
-    
+    mov bp, CODE_JUMP
+	
 	sub word [bx], CODE_JUMP
 	
-    mov sp, ax
-    mov bp, CODE_JUMP
+	mov dx, ZOMBIES_TIMER
+    mov sp, ax;TODO - change this to a real switch
+	mov di, sp
     call far [bx]
 after_zombie:
     
