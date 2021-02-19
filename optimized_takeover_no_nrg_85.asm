@@ -124,26 +124,43 @@ sub si, 0x0100
 pop cx
 mov [si], cx
 
-push ds
-pop es
-mov di, 0
-mov ax, ZOMBPLUS87 ;little indi
-mov dx, 0xE3D1 ;little indi
-mov bx, ZOMBPLUS87
-mov cx, OPCODE_FOR_JMP 
-int 0x87
+xchg ax, [0x8000 + si]  
+xlatb                   ;al = startL^startH
+xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
+xlatb                   ;al = startL
+xor ah, al
+
+mov bx, ax
+mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP
+
+; push ds
+; pop es
+; mov di, 0
+; mov ax, ZOMBPLUS87 ;little indi
+; mov dx, 0xE3D1 ;little indi
+; mov bx, ZOMBPLUS87
+; mov cx, OPCODE_FOR_JMP 
+; int 0x87
 
 END:
 jmp END
 
 zombie_here:
 ; Change to add int 87
-push ds
-pop es
-mov di, 0
-mov ax, ZOMBPLUS87 ;little indi
-mov dx, 0xE3D1 ;little indi
-mov bx, ZOMBPLUS87
-mov cx, OPCODE_FOR_JMP 
-int 0x87
-jmp zombie_here
+
+xchg ax, [0x8000 + si]  
+xlatb                   ;al = startL^startH
+xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
+xlatb                   ;al = startL
+xor ah, al
+
+mov bx, ax
+mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP
+
+
+
+
+
+
+
+

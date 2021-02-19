@@ -123,7 +123,7 @@ mov bx, ax
 mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
 ; POSSIBLE OPCODES: E2F8, E63F, 0089; 0100-0800, F8E2, 8346, 3FE6, EB3F, CCCC
 
-mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC
+mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC ; consider if this pays off
 
 push ds
 pop es
