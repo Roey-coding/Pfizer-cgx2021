@@ -163,7 +163,6 @@ END:
 jmp END
 
 zombie_here:
-; Change to add int 87
 jmp zombie_here
 
 start_arr:

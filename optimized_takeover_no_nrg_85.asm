@@ -154,29 +154,13 @@ int 0x86
 
 after1:
 
-xchg ax, [0x8000 + si]  
-xlatb                   ;al = startL^startH
-xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
-xlatb                   ;al = startL
-xor ah, al
 
-mov bx, ax
-mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP
 
 END:
 jmp END
 
 zombie_here:
-; Change to add int 87
-
-xchg ax, [0x8000 + si]  
-xlatb                   ;al = startL^startH
-xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
-xlatb                   ;al = startL
-xor ah, al
-
-mov bx, ax
-mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP
+jmp zombie_here
 
 
 
