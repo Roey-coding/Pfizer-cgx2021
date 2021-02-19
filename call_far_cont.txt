@@ -52,23 +52,23 @@ mov byte [si+(adress_put_here+3)], ah
 lea si, [si + start_Copy]
 rep movsw
 
-
-mov bx , di
-mov al , 0xA2
-stosw
-
 push ds 
 push es
 pop ds
 pop es
 
-mov word [di] , 0x1000 + CS_OFFSET
+mov bx , 0x50
+mov al , 0xA2
+mov [bx],ax
+
 
 push cs
 pop ss
 mov sp, ax ;put sp in the right place
 
 xor di, di ; timer
+
+mov word [bx + 2], 0x1000 + CS_OFFSET
 
 mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
 mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
