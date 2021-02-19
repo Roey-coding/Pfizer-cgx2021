@@ -22,15 +22,15 @@ zombie:
     
     mov si, start - start_Copy + 2
     pop ds
-    mov word [start - start_Copy + 10], STACK_JUMP
-    pop es
+	mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
+	mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;    pop es
     pop ss
     mov sp, ax
     mov bp, CODE_JUMP
     call far [bx]
 after_zombie:
     
-mov byte [RANDOM_LOCATION], 0xA3
+mov byte [RANDOM_LOCATION], 0xA2
 mov byte [RANDOM_LOCATION+1], ah
 sub word [RANDOM_LOCATION], CODE_JUMP
 mov word [RANDOM_LOCATION+2], 0x1000 + CS_OFFSET
@@ -59,7 +59,7 @@ mov sp, ax ;put sp in the right place
 
 mov dx, 0xabcd ; timer
 mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
-mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 1) ;
+mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
 mov bp, CODE_JUMP
 
 sub word [bx], CODE_JUMP
@@ -105,6 +105,7 @@ update_sp_si_flag:
 movsw
 xor si,si
 movsw
+nop
 end_Copy:
 ;need to make sure kill lands on a byte from cs of the call far bombing that kills for sure
 kill:
