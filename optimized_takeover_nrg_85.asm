@@ -41,7 +41,7 @@ and si, 0x0700
 mov bx, ax
 add bx, start_arr
 
-mov cx, 3
+mov cx, 1
 NRG:
 WAIT
 WAIT
