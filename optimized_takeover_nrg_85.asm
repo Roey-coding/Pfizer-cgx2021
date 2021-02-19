@@ -28,6 +28,7 @@
 
 %define SEMPLE1 0x8900
 %define SEMPLE2 0x3FE6
+%define HUNDRED 0x100
 
 jmp over_pad
 
@@ -36,7 +37,7 @@ mov [MEMORY_XCHANGE_AREA], ax
 
 mov si, ax
 and si, 0x0700
-; Now cx is the zombie we'd like to find.
+; Now si is the zombie we'd like to find.
 
 mov bx, ax
 add bx, start_arr
@@ -66,17 +67,17 @@ WAIT
 loop NRG
 
 mov cx, CARPET
-mov [FIRST32 + si], cx
-mov [SECOND32 + si], cx
-mov [THIRD32 + si], cx
-mov [FIRST16 + si], cx
-mov [SECOND16 + si], cx
-mov [THIRD16 + si], cx
-mov [FOURTH16 + si], cx
-mov [FIRST8 + si], cx
-mov [SECOND8 + si], cx
-mov [THIRD8 + si], cx
-mov [FIRST4 + si], cx
+mov [FIRST32 + HUNDRED + si], cx
+mov [SECOND32 + HUNDRED + si], cx
+mov [THIRD32 + HUNDRED + si], cx
+mov [FIRST16 + HUNDRED + si], cx
+mov [SECOND16 + HUNDRED + si], cx
+mov [THIRD16 + HUNDRED + si], cx
+mov [FOURTH16 + HUNDRED + si], cx
+mov [FIRST8 + HUNDRED + si], cx
+mov [SECOND8 + HUNDRED + si], cx
+mov [THIRD8 + HUNDRED + si], cx
+mov [FIRST4 + HUNDRED + si], cx
 
 mov dx, ax
 add dx, zombie_here
@@ -91,24 +92,24 @@ db 0x00
 db 0x3D
 	; This next line should be executed at step 41
 	
-xor ax, [SECOND32 + si]	;z
-xor ax, [THIRD32 + si]	;nz
-xor ax, [FIRST16 + si]	;z
-xor ax, [SECOND16 + si]	;nz
-xor ax, [THIRD16 + si]	;z
+xor ax, [SECOND32 + HUNDRED + si]	;z
+xor ax, [THIRD32 + HUNDRED + si]	;nz
+xor ax, [FIRST16 + HUNDRED + si]	;z
+xor ax, [SECOND16 + HUNDRED + si]	;nz
+xor ax, [THIRD16 + HUNDRED + si]	;z
 jz cont
 xor ax, CARPET
 jmp takeover
 cont:
-xor ax, [FOURTH16 + si]	;nz
-xor ax, [FIRST8 + si]		;z
+xor ax, [FOURTH16 + HUNDRED + si]	;nz
+xor ax, [FIRST8 + HUNDRED + si]		;z
 jz cont1
 xor ax, CARPET
 jmp takeover
 cont1:
-xor ax, [SECOND8 + si]	;nz
-xor ax, [THIRD8 + si]		;z
-xor ax, [FIRST4 + si]		;nz
+xor ax, [SECOND8 + HUNDRED + si]	;nz
+xor ax, [THIRD8 + HUNDRED + si]		;z
+xor ax, [FIRST4 + HUNDRED + si]		;nz
 ;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
 
 ; This'll be once we have finished all the xor's, 

@@ -16,7 +16,7 @@
 %define SECOND8 0xD100
 %define THIRD8 0x5100
 %define FIRST4 0x2100
-%define ZOMBPLUS 0x0200
+%define ZOMBPLUS 0x0100
 %define ZOMBPLUS87 0x0300
 %define CARPET 0xF0F1
 
@@ -27,7 +27,7 @@
 %define ITERATIONS_AFTER_NRG 13
 %define JUMP_NRG_BYTE 0x67
 %define DOUBLE_NOP 0x9090
-%define DEADS 4
+%define DEADS 25
 %define START_LIST 214
 
 %define SEMPLE1 0x3FEB
@@ -69,16 +69,16 @@ mov word [SEMPLE1], CCCC
 mov word [SEMPLE2], CCCC
 
 mov cx, CARPET					; Would you take a look at this beauty?
-mov [FIRST32 + bx], cx
-mov [SECOND32 + bx], cx
-mov [THIRD32 + bx], cx
-mov [FIRST16 + bx], cx
-mov [SECOND16 + bx], cx
-mov [THIRD16 + bx], cx
-mov [FIRST8 + bx], cx
-mov [SECOND8 + bx], cx
-mov [THIRD8 + bx], cx
-mov [FIRST4 + bx], cx
+mov [FIRST32 + ZOMBPLUS + bx], cx
+mov [SECOND32 + ZOMBPLUS + bx], cx
+mov [THIRD32 + ZOMBPLUS + bx], cx
+mov [FIRST16 + ZOMBPLUS + bx], cx
+mov [SECOND16 + ZOMBPLUS + bx], cx
+mov [THIRD16 + ZOMBPLUS + bx], cx
+mov [FIRST8 + ZOMBPLUS + bx], cx
+mov [SECOND8 + ZOMBPLUS + bx], cx
+mov [THIRD8 + ZOMBPLUS + bx], cx
+mov [FIRST4 + ZOMBPLUS + bx], cx
 
 
 ; Dead stuffs
@@ -96,16 +96,16 @@ mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC
 mov word [bx + (JUMP_NRG_BYTE - START_LIST)], 0x8433
 
 ; This next line should be executed at step 41
-xor ax, [FIRST32 + ZOMBPLUS]
-xor ax, [SECOND32 + ZOMBPLUS]
-xor ax, [THIRD32 + ZOMBPLUS]
-xor ax, [FIRST16 + ZOMBPLUS]
-xor ax, [SECOND16 + ZOMBPLUS]
-xor ax, [THIRD16 + ZOMBPLUS]
-xor ax, [FIRST8 + ZOMBPLUS]
-xor ax, [SECOND8 + ZOMBPLUS]
-xor ax, [THIRD8 + ZOMBPLUS]
-xor ax, [FIRST4 + ZOMBPLUS]
+xor ax, [bx + FIRST32 + ZOMBPLUS]
+xor ax, [bx + SECOND32 + ZOMBPLUS]
+xor ax, [bx + THIRD32 + ZOMBPLUS]
+xor ax, [bx + FIRST16 + ZOMBPLUS]
+xor ax, [bx + SECOND16 + ZOMBPLUS]
+xor ax, [bx + THIRD16 + ZOMBPLUS]
+xor ax, [bx + FIRST8 + ZOMBPLUS]
+xor ax, [bx + SECOND8 + ZOMBPLUS]
+xor ax, [bx + THIRD8 + ZOMBPLUS]
+xor ax, [bx + FIRST4 + ZOMBPLUS]
 
 ;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
 
