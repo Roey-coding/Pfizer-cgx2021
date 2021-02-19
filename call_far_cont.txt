@@ -23,9 +23,14 @@ zombie:
 	adress_put_here:
 	mov word [bx], 0x00A2 ;need to add here the addres
 	mov word [bx + 2], 0x1000 + CS_OFFSET
-	mov si,start - start_Copy + 2
 	
-    
+	mov word [0], 0xcccc
+	mov word [2], 0xffcc
+	mov word [4], 0xcc1f
+	mov word [6], 0xcccc
+	
+	
+    mov si,start - start_Copy + 2
     mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
 	mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
     mov bp, CODE_JUMP
@@ -63,7 +68,8 @@ push cs
 pop ss
 mov sp, ax ;put sp in the right place
 
-mov dx, 0xabcd ; timer
+xor di, di ; timer
+
 mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
 mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
 mov bp, CODE_JUMP
