@@ -43,7 +43,7 @@ rep movsw
 
 
 mov bx , di
-mov al , 0xA3
+mov al , 0xA2
 stosw
 
 push ds 
@@ -94,6 +94,7 @@ start:
 update_di_si_flag:
 call far [bx]
 
+movsw
 movsw
 movsw
 sub word [bx], bp
