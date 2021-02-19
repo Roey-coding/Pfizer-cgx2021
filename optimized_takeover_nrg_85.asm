@@ -163,6 +163,8 @@ END:
 jmp END
 
 zombie_here:
+db 0xcc
+db 0xcc
 jmp zombie_here
 
 start_arr:
