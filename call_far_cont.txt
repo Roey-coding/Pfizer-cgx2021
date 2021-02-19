@@ -5,38 +5,10 @@
 
 delete_this:
     mov [0], ax
-    add word [0], zombie
-    
-jmp after_zombie
-zombie:
-	
-	push ss
-	pop ds
-	
-    push cs
-	pop es
-	
-	push cs
-	pop ss
-	
-	mov bx,0x50
-	adress_put_here:
-	mov word [bx], 0x00A2 ;need to add here the addres
-	
-	mov word [0], 0xcccc
-	mov word [2], 0xffcc
-	mov word [4], 0xcc1f
-	mov word [6], 0xcccc
-	
-	mov dx, ZOMBIES_TIMER
-    mov sp, ax;TODO - change this to a real switch
-	mov di, sp
-	mov si,start - start_Copy +2
-	sub word [bx], CODE_JUMP
-	
-	jmp zombie_here
-after_zombie:
-    
+    add word [0], zombie    
+
+
+
 
 mov cx , ((end_Copy - start_Copy)/ 2)
 mov si, ax
@@ -116,3 +88,32 @@ end_Copy:
 ;need to make sure kill lands on a byte from cs of the call far bombing that kills for sure
 nop
 kill:
+
+
+zombie:
+	
+	push ss
+	pop ds
+	
+    push cs
+	pop es
+	
+	push cs
+	pop ss
+	
+	mov bx,0x50
+	adress_put_here:
+	mov word [bx], 0x00A2 ;need to add here the addres
+	
+	mov word [0], 0xcccc
+	mov word [2], 0xffcc
+	mov word [4], 0xcc1f
+	mov word [6], 0xcccc
+	
+	mov dx, ZOMBIES_TIMER
+    mov sp, ax;TODO - change this to a real switch
+	mov di, sp
+	mov si,start - start_Copy +2
+	sub word [bx], CODE_JUMP
+	
+	jmp zombie_here
