@@ -112,4 +112,5 @@ movsw
 nop
 end_Copy:
 ;need to make sure kill lands on a byte from cs of the call far bombing that kills for sure
+nop
 kill:
