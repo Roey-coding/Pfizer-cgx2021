@@ -3,12 +3,14 @@
 %define CS_OFFSET -0x1
 %define ZOMBIES_TIMER 0X0122
 %define TO_JUMP 0XdfA2
+%define ZOMBIE_DIST 0x1400
+%define SP_SHARE_ADDR 0xDEFF
 
 delete_this:
     mov [0], ax
     add word [0], zombie    
 
-
+mov word [SP_SHARE_ADDR], TO_JUMP-STACK_JUMP-ZOMBIE_DIST
 
 
 mov cx , ((end_Copy - start_Copy)/ 2)
@@ -16,6 +18,8 @@ mov si, ax
 
 
 lea si, [si + start_Copy]
+push ss
+pop es
 rep movsw
 
 push ds 
@@ -89,13 +93,18 @@ end_Copy:
 nop
 kill:
 
-
+other_sur:
+    mov cx, TO_JUMP - STACK_JUMP + ZOMBIE_DIST
+jmp skip_beggining
 zombie:
-	
+; to not interupt the stack, cx will hold sp for now.
+        mov cx, [SP_SHARE_ADDR]
+        sub word [SP_SHARE_ADDR], ZOMBIE_DIST
+	skip_beggining:
 	push ss
 	pop ds
 	
-    push cs
+        push cs
 	pop es
 	
 	push cs
@@ -110,7 +119,7 @@ zombie:
 	mov word [6], 0xcccc
 	
 	mov dx, ZOMBIES_TIMER
-    mov sp, ax;TODO - change this to a real switch
+        mov sp, cx
 	mov di, sp
 	mov si,start - start_Copy +2
 	sub word [bx], CODE_JUMP
