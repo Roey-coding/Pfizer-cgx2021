@@ -3,20 +3,20 @@
 %define OPCODE_FOR_JMP 0xA5FF
 %define CCCC 0xCCCC
 %define MEMORY_XCHANGE_AREA 0xDDDD
-%define FIRST64 0x3E00
-%define SECOND64 0xDE00
-%define THIRD64 0x5E00
-%define FIRST32 0x3C00
-%define SECOND32 0xDC00
-%define THIRD32 0x5C00
-%define FIRST16 0xD800
-%define SECOND16 0x3800
-%define THIRD16 0x5800
-%define FOURTH16 0xF800
-%define FIRST8 0x3000
-%define SECOND8 0xD000
-%define THIRD8 0x5000
-%define FIRST4 0x2000
+%define FIRST64 0x3F00
+%define SECOND64 0xDF00
+%define THIRD64 0x5F00
+%define FIRST32 0x3D00
+%define SECOND32 0xDD00
+%define THIRD32 0x5D00
+%define FIRST16 0xD900
+%define SECOND16 0x3900
+%define THIRD16 0x5900
+%define FOURTH16 0xF900
+%define FIRST8 0x3100
+%define SECOND8 0xD100
+%define THIRD8 0x5100
+%define FIRST4 0x2100
 
 %define ZOMBPLUS 0x0100
 %define ZOMBPLUS87 0x0300
@@ -30,6 +30,10 @@ jmp over_pad
 over_pad:
 
 mov [MEMORY_XCHANGE_AREA], ax
+
+mov si, ax
+and si, 0x0700
+; Now cx is the zombie we'd like to find.
 
 mov bx, ax
 add bx, start_arr
@@ -59,17 +63,17 @@ WAIT
 loop NRG
 
 mov cx, CARPET
-mov [FIRST32 + ZOMBPLUS], cx
-mov [SECOND32 + ZOMBPLUS], cx
-mov [THIRD32 + ZOMBPLUS], cx
-mov [FIRST16 + ZOMBPLUS], cx
-mov [SECOND16 + ZOMBPLUS], cx
-mov [THIRD16 + ZOMBPLUS], cx
-mov [FOURTH16 + ZOMBPLUS], cx
-mov [FIRST8 + ZOMBPLUS], cx
-mov [SECOND8 + ZOMBPLUS], cx
-mov [THIRD8 + ZOMBPLUS], cx
-mov [FIRST4 + ZOMBPLUS], cx
+mov [FIRST32 + si], cx
+mov [SECOND32 + si], cx
+mov [THIRD32 + si], cx
+mov [FIRST16 + si], cx
+mov [SECOND16 + si], cx
+mov [THIRD16 + si], cx
+mov [FOURTH16 + si], cx
+mov [FIRST8 + si], cx
+mov [SECOND8 + si], cx
+mov [THIRD8 + si], cx
+mov [FIRST4 + si], cx
 
 mov dx, ax
 add dx, zombie_here
@@ -84,25 +88,24 @@ db 0x00
 db 0x3D
 	; This next line should be executed at step 41
 	
-xor ax, [FIRST32 + ZOMBPLUS]	;nz
-xor ax, [SECOND32 + ZOMBPLUS]	;z
-xor ax, [THIRD32 + ZOMBPLUS]	;nz
-xor ax, [FIRST16 + ZOMBPLUS]	;z
-xor ax, [SECOND16 + ZOMBPLUS]	;nz
-xor ax, [THIRD16 + ZOMBPLUS]	;z
+xor ax, [SECOND32 + si]	;z
+xor ax, [THIRD32 + si]	;nz
+xor ax, [FIRST16 + si]	;z
+xor ax, [SECOND16 + si]	;nz
+xor ax, [THIRD16 + si]	;z
 jz cont
 xor ax, CARPET
 jmp takeover
 cont:
-xor ax, [FOURTH16 + ZOMBPLUS]	;nz
-xor ax, [FIRST8 + ZOMBPLUS]		;z
+xor ax, [FOURTH16 + si]	;nz
+xor ax, [FIRST8 + si]		;z
 jz cont1
 xor ax, CARPET
 jmp takeover
 cont1:
-xor ax, [SECOND8 + ZOMBPLUS]	;nz
-xor ax, [THIRD8 + ZOMBPLUS]		;z
-xor ax, [FIRST4 + ZOMBPLUS]		;nz
+xor ax, [SECOND8 + si]	;nz
+xor ax, [THIRD8 + si]		;z
+xor ax, [FIRST4 + si]		;nz
 ;This will be optimized for ZOMA only, for a different zombie see excel that does not yet exist.
 
 ; This'll be once we have finished all the xor's, 
