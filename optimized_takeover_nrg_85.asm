@@ -32,8 +32,9 @@ over_pad:
 mov [MEMORY_XCHANGE_AREA], ax
 
 mov si, ax
+sub si, 0x100
 and si, 0x0700
-; Now cx is the zombie we'd like to find.
+; Now si is the zombie we'd like to find.
 
 mov bx, ax
 add bx, start_arr
@@ -122,9 +123,6 @@ xor ah, al
 mov bx, ax
 mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
 ; POSSIBLE OPCODES: E2F8, E63F, 0089; 0100-0800, F8E2, 8346, 3FE6, EB3F, CCCC
-
-mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC ; consider if this pays off
-
 push ds
 pop es
 mov di, 0
@@ -144,6 +142,8 @@ END:
 jmp END
 
 zombie_here:
+db 0xcc
+db 0xcc
 ; Change to add int 87
 push ds
 pop es
