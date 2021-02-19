@@ -22,25 +22,19 @@ zombie:
 	mov bx,0x50
 	adress_put_here:
 	mov word [bx], 0x00A2 ;need to add here the addres
-	mov word [bx + 2], 0x1000 + CS_OFFSET
 	
 	mov word [0], 0xcccc
 	mov word [2], 0xffcc
 	mov word [4], 0xcc1f
 	mov word [6], 0xcccc
 	
-	
-    mov si,start - start_Copy + 2
-    mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
-	mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
-    mov bp, CODE_JUMP
-	
-	sub word [bx], CODE_JUMP
-	
 	mov dx, ZOMBIES_TIMER
     mov sp, ax;TODO - change this to a real switch
 	mov di, sp
-    call far [bx]
+	mov si,start - start_Copy +2
+	sub word [bx], CODE_JUMP
+	
+	jmp zombie_here
 after_zombie:
     
 
@@ -61,20 +55,13 @@ mov bx , 0x50
 mov al , 0xA2
 mov [bx],ax
 
+sub word [bx], CODE_JUMP
 
 push cs
 pop ss
 mov sp, ax ;put sp in the right place
 
-xor di, di ; timer
-
-mov word [bx + 2], 0x1000 + CS_OFFSET
-
-mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
-mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
-mov bp, CODE_JUMP
-
-sub word [bx], CODE_JUMP
+xor dx, dx ; timer
 mov di, [bx]
 add di, 0x10 * CS_OFFSET
 
@@ -83,6 +70,13 @@ sub sp, STACK_JUMP
 mov si,start - start_Copy
 movsw
 dec di
+
+zombie_here:
+mov word [bx + 2], 0x1000 + CS_OFFSET
+mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
+mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
+mov bp, CODE_JUMP
+
 call far [bx]
 
 start_Copy:
