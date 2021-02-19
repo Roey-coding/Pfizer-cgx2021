@@ -25,10 +25,13 @@
 %define FIRST_ITERATION 41
 %define REAL_OPS_BEFORE_TREE 23
 %define NOPS 10
+
+%define SEMPLE1 0x8900
+%define SEMPLE2 0x3FE6
+
 jmp over_pad
 
 over_pad:
-
 mov [MEMORY_XCHANGE_AREA], ax
 
 mov si, ax
@@ -121,18 +124,34 @@ xor ah, al
 
 mov bx, ax
 mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
-; POSSIBLE OPCODES: E2F8, E63F, 0089; 0100-0800, F8E2, 8346, 3FE6, EB3F, CCCC
+; POSSIBLE OPCODES: E2F8, E63F, 0089; 0100-0800, 8346, 3FE6, EB3F, CCCC
 
 mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC ; consider if this pays off
 
 push ds
 pop es
-mov di, 0
-mov ax, ZOMBPLUS87 ;little indi
-mov dx, 0xE3D1 ;little indi
-mov bx, ZOMBPLUS87
-mov cx, OPCODE_FOR_JMP 
-int 0x87
+
+cmp word [SEMPLE1], CCCC
+je after
+
+mov word bx, [SEMPLE1]
+mov ax, 0x26ff
+mov dx, ax
+mov di, bx
+int 0x86
+
+after:
+
+cmp word [SEMPLE2], CCCC
+je after1
+
+mov word bx, [SEMPLE2]
+mov ax, 0x26ff
+mov dx, ax
+mov di, bx
+int 0x86
+
+after1:
 
 main_loop:
 
@@ -145,14 +164,6 @@ jmp END
 
 zombie_here:
 ; Change to add int 87
-push ds
-pop es
-mov di, 0
-mov ax, ZOMBPLUS87 ;little indi
-mov dx, 0xE3D1 ;little indi
-mov bx, ZOMBPLUS87
-mov cx, OPCODE_FOR_JMP 
-int 0x87
 jmp zombie_here
 
 start_arr:

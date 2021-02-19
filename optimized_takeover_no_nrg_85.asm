@@ -16,7 +16,6 @@
 %define SECOND8 0xD100
 %define THIRD8 0x5100
 %define FIRST4 0x2100
-
 %define ZOMBPLUS 0x0200
 %define ZOMBPLUS87 0x0300
 %define CARPET 0xF0F1
@@ -28,8 +27,11 @@
 %define ITERATIONS_AFTER_NRG 13
 %define JUMP_NRG_BYTE 0x67
 %define DOUBLE_NOP 0x9090
-%define DEADS 6
+%define DEADS 4
 %define START_LIST 214
+
+%define SEMPLE1 0x3FEB
+%define SEMPLE2 0x4683
 
 jmp over_pad
 
@@ -62,6 +64,9 @@ mov word [CCCC + 1], dx
 mov word [CCCC + 3], 0xE0FF
 mov word [0x26FF], CCCC
 ;;;;end
+
+mov word [SEMPLE1], CCCC
+mov word [SEMPLE2], CCCC
 
 mov cx, CARPET					; Would you take a look at this beauty?
 mov [FIRST32 + bx], cx
@@ -124,6 +129,31 @@ sub si, 0x0100
 pop cx
 mov [si], cx
 
+push ds
+pop es
+
+cmp word [SEMPLE1], CCCC
+je after
+
+mov bx, SEMPLE1
+mov ax, 0x26ff
+mov dx, 0xcccc
+mov di, bx
+int 0x86
+
+after:
+
+cmp word [SEMPLE2], CCCC
+je after1
+
+mov bx, SEMPLE2
+mov ax, 0x26ff
+mov dx, 0xcccc
+mov di, bx
+int 0x86
+
+after1:
+
 xchg ax, [0x8000 + si]  
 xlatb                   ;al = startL^startH
 xchg al, ah             ;ah = startL^startH, al = zombArr[startL]
@@ -132,15 +162,6 @@ xor ah, al
 
 mov bx, ax
 mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP
-
-; push ds
-; pop es
-; mov di, 0
-; mov ax, ZOMBPLUS87 ;little indi
-; mov dx, 0xE3D1 ;little indi
-; mov bx, ZOMBPLUS87
-; mov cx, OPCODE_FOR_JMP 
-; int 0x87
 
 END:
 jmp END
