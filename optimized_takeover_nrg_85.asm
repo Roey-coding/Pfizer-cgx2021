@@ -122,6 +122,9 @@ xor ah, al
 mov bx, ax
 mov word [bx+DESIGNATED_JUMP_POSITION], OPCODE_FOR_JMP ;jmp [nxt_opcode]
 ; POSSIBLE OPCODES: E2F8, E63F, 0089; 0100-0800, F8E2, 8346, 3FE6, EB3F, CCCC
+
+mov word [BYTE_AFTER_DESIGNATED_JUMP], CCCC
+
 push ds
 pop es
 mov di, 0

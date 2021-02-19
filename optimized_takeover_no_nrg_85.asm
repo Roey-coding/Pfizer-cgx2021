@@ -28,9 +28,12 @@
 %define ITERATIONS_AFTER_NRG 13
 %define JUMP_NRG_BYTE 0x67
 %define DOUBLE_NOP 0x9090
-%define DEADS 25
+%define DEADS 6
 %define START_LIST 214
 
+jmp over_pad
+
+over_pad:
 
 ; Saving the at-risk code in stack.
 mov si, ax
@@ -44,7 +47,7 @@ push word [si]
 mov bx, [MEMORY_XCHANGE_AREA]
 
 mov cx, bx
-add cx, 0x0300
+add ch, 0x03
 and cx, 0x0700
 ; Now cx is the zombie we'd like to find.
 
