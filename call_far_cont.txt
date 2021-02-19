@@ -2,6 +2,7 @@
 %define STACK_JUMP 0x200
 %define CS_OFFSET -0x1
 %define ZOMBIES_TIMER 0X0122
+%define TO_JUMP 0XdfA2
 
 delete_this:
     mov [0], ax
@@ -13,7 +14,6 @@ delete_this:
 mov cx , ((end_Copy - start_Copy)/ 2)
 mov si, ax
 
-mov byte [si+(adress_put_here+3)], ah
 
 lea si, [si + start_Copy]
 rep movsw
@@ -24,7 +24,7 @@ pop ds
 pop es
 
 mov bx , 0x50
-mov al , 0xA2
+mov ax , TO_JUMP
 mov [bx],ax
 
 sub word [bx], CODE_JUMP
@@ -102,8 +102,7 @@ zombie:
 	pop ss
 	
 	mov bx,0x50
-	adress_put_here:
-	mov word [bx], 0x00A2 ;need to add here the addres
+	mov word [bx], TO_JUMP ;need to add here the addres
 	
 	mov word [0], 0xcccc
 	mov word [2], 0xffcc
