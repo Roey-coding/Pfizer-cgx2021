@@ -10,35 +10,39 @@ delete_this:
 jmp after_zombie
 zombie:
     push cs
+	
+	push ss
+	pop ds
+	
     push cs
-    push ss
-    push ss
-    pop es
-    mov si, RANDOM_LOCATION
-    xor di, di
-    movsw
-    movsw
-    xor bx, bx
+	pop es
+	
+	pop ss
+	
+	mov bx,0x50
+	adress_put_here:
+	mov word [bx], 0x00A2 ;need to add here the addres
+	mov word [bx + 2], 0x1000 + CS_OFFSET
+	mov si,start - start_Copy + 2
+	
+    xor di,di
+    mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
+	mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;
     
-    mov si, start - start_Copy + 2
-    pop ds
-	mov word [bx + (update_sp_si_flag - start_Copy)], STACK_JUMP
-	mov word [bx + (update_di_si_flag - start_Copy)],CODE_JUMP + (end_Copy-start_Copy - 2) ;    pop es
-    pop ss
+	sub word [bx], CODE_JUMP
+	
     mov sp, ax
     mov bp, CODE_JUMP
     call far [bx]
 after_zombie:
     
-mov byte [RANDOM_LOCATION], 0xA2
-mov byte [RANDOM_LOCATION+1], ah
-sub word [RANDOM_LOCATION], CODE_JUMP
-mov word [RANDOM_LOCATION+2], 0x1000 + CS_OFFSET
-;store on cs the long pointer
 
 mov cx , ((end_Copy - start_Copy)/ 2)
-mov bp, ax
-lea si, [bp + start_Copy]
+mov si, ax
+
+mov byte [si+(adress_put_here+3)], ah
+
+lea si, [si + start_Copy]
 rep movsw
 
 
